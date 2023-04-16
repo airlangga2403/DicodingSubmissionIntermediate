@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.pa.submissionaplikasistoryapp.R
 import com.pa.submissionaplikasistoryapp.data.remote.response.ListStoryItem
@@ -35,6 +36,7 @@ class ListStoryAdapter : ListAdapter<ListStoryItem, ListStoryAdapter.ListViewHol
         fun bind(item: ListStoryItem) {
             Glide.with(itemView.context)
                 .load(item.photoUrl)
+                .transform(RoundedCorners(10))
                 .apply(RequestOptions().override(200, 200))
                 .into(tvAvatar)
             name.text = item.name

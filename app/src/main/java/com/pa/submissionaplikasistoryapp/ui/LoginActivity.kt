@@ -51,8 +51,7 @@ class LoginActivity : AppCompatActivity() {
             if (response.error) {
                 Toast.makeText(this, "User Failed Login", Toast.LENGTH_SHORT).show()
                 showProgressBar(false)
-            } else {
-//                SET SHARED PREF TO TRUE SESSION
+            } else if (response.loginResult != null) {
                 showProgressBar(false)
                 UserTokenPref.setLoggedIn(true)
                 Toast.makeText(this, "User ${response.loginResult.name} Successfully Login", Toast.LENGTH_SHORT).show()
@@ -60,6 +59,9 @@ class LoginActivity : AppCompatActivity() {
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
+            } else {
+                Toast.makeText(this, "Login failed due to invalid credentials", Toast.LENGTH_SHORT).show()
+                showProgressBar(false)
             }
 
         })

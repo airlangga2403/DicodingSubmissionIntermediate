@@ -7,6 +7,8 @@ import com.pa.submissionaplikasistoryapp.data.remote.response.ResponseGetDetailS
 import com.pa.submissionaplikasistoryapp.data.remote.response.ResponseGetStories
 import com.pa.submissionaplikasistoryapp.data.remote.response.ResponseRegister
 import com.pa.submissionaplikasistoryapp.data.repository.RegisterRepository
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class RegisterViewModel(private val registerRepository: RegisterRepository) : ViewModel() {
     fun registerUser(name: String, email: String, password: String): LiveData<ResponseRegister> {
@@ -24,4 +26,12 @@ class RegisterViewModel(private val registerRepository: RegisterRepository) : Vi
     }
 
     fun logoutUser() = registerRepository.logoutUser()
+
+    fun uploadStory(
+        file: MultipartBody.Part,
+        description: RequestBody,
+        lat: Double,
+        lon: Double,
+        multiPort: String,
+    ) = registerRepository.uploadStory(file, description, lat, lon, multiPort)
 }

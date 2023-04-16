@@ -46,6 +46,8 @@ class HomeActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.addstory -> {
+                val intent = Intent(this@HomeActivity, AddStoryActivity::class.java)
+                startActivity(intent)
                 true
             }
             R.id.logout -> {

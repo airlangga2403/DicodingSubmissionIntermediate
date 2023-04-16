@@ -73,6 +73,7 @@ class RegisterActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
+
         })
 
     }
@@ -128,11 +129,6 @@ class RegisterActivity : AppCompatActivity() {
             }
         })
     }
-
-//    private fun setMyButtonEnable() {
-//        val result = binding.password.text
-//        binding.registerButton.isEnabled = result != null && result.toString().isNotEmpty()
-//    }
 
     private fun setMyButtonEnable(
         editText1: EditText,
