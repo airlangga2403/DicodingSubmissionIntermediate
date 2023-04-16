@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pa.submissionaplikasistoryapp.data.remote.pref.UserTokenPref
-import com.pa.submissionaplikasistoryapp.data.remote.response.ListStoryItem
 import com.pa.submissionaplikasistoryapp.data.remote.response.ResponseGetStories
 import com.pa.submissionaplikasistoryapp.data.remote.response.ResponseLogin
 import com.pa.submissionaplikasistoryapp.data.remote.response.ResponseRegister
@@ -55,8 +54,8 @@ class RegisterRepository private constructor(
                     response: Response<ResponseLogin>
                 ) {
                     if (response.isSuccessful) {
-                        data.value = response.body()
                         UserTokenPref.setToken(response.body()!!.loginResult.token)
+                        data.value = response.body()
                     }
                 }
 
@@ -71,21 +70,22 @@ class RegisterRepository private constructor(
         return data
     }
 
-    fun getAllStories(token: String) : LiveData<List<ListStoryItem>> {
-        val client = apiService.getAllStories(token)
-        val data = MutableLiveData<List<ListStoryItem>>()
-        client.enqueue(object: Callback<List<ListStoryItem>> {
-            override fun onFailure(call: Call<List<ListStoryItem>>, t: Throwable) {
-                Log.e("OnFailure", t.message.toString())
-            }
-
+    fun getStories(page: Int, size: Int): LiveData<ResponseGetStories> {
+        val client = apiService.getStories(page,size)
+        val data = MutableLiveData<ResponseGetStories>()
+        client.enqueue(object: Callback<ResponseGetStories> {
             override fun onResponse(
-                call: Call<List<ListStoryItem>>,
-                response: Response<List<ListStoryItem>>
+                call: Call<ResponseGetStories>,
+                response: Response<ResponseGetStories>
             ) {
-                if (response.isSuccessful) {
+                if(response.isSuccessful) {
                     data.value = response.body()
                 }
+
+            }
+
+            override fun onFailure(call: Call<ResponseGetStories>, t: Throwable) {
+                Log.e(TAG, t.message.toString())
             }
         })
         return data

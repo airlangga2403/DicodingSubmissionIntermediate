@@ -23,5 +23,8 @@ interface ApiService {
     ): Call<ResponseLogin>
 
     @GET("stories")
-    fun getAllStories( @Header("Authorization") token: String): Call<List<ListStoryItem>>
+    fun getStories(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+    ): Call<ResponseGetStories>
 }

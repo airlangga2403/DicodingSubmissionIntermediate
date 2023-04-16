@@ -47,13 +47,14 @@ class LoginActivity : AppCompatActivity() {
     private fun login(email: String, password: String){
         showProgressBar(true)
         viewModel.loginUser(email, password).observe(this, { response ->
-            showProgressBar(false)
+
             if (response.error) {
                 Toast.makeText(this, "User Failed Login", Toast.LENGTH_SHORT).show()
+                showProgressBar(false)
             } else {
 //                SET SHARED PREF TO TRUE SESSION
+                showProgressBar(false)
                 UserTokenPref.setLoggedIn(true)
-
                 Toast.makeText(this, "User ${response.loginResult.name} Successfully Login}", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this@LoginActivity, HomeActivity::class.java)
                 startActivity(intent)
