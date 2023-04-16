@@ -13,4 +13,10 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
+    <string name="add_story">Add Your Story</string>
+    <string name="logout">Logout</string>
+
+    <string name="description">Description</string>
+    <string name="created_at">Created Date</string>
+
 </resources>

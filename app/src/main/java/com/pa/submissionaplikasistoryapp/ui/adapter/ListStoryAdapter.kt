@@ -1,6 +1,6 @@
 package com.pa.submissionaplikasistoryapp.ui.adapter
 
-import android.util.Log
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.pa.submissionaplikasistoryapp.R
 import com.pa.submissionaplikasistoryapp.data.remote.response.ListStoryItem
+import com.pa.submissionaplikasistoryapp.ui.DetailStoryActivity
 
 class ListStoryAdapter : ListAdapter<ListStoryItem, ListStoryAdapter.ListViewHolder>(DIFF_CALLBACK) {
 
@@ -29,13 +30,22 @@ class ListStoryAdapter : ListAdapter<ListStoryItem, ListStoryAdapter.ListViewHol
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvAvatar: ImageView = itemView.findViewById(R.id.iv_item_photo)
         private val name: TextView = itemView.findViewById(R.id.tv_item_name)
+        private val createdAt: TextView = itemView.findViewById(R.id.tv_created_at)
 
         fun bind(item: ListStoryItem) {
             Glide.with(itemView.context)
                 .load(item.photoUrl)
-                .apply(RequestOptions().override(100, 100))
+                .apply(RequestOptions().override(200, 200))
                 .into(tvAvatar)
             name.text = item.name
+            createdAt.text = item.createdAt
+
+            // Navigate to detail story page and pass the ID data when item is clicked
+            itemView.setOnClickListener {
+                val intent = Intent(itemView.context, DetailStoryActivity::class.java)
+                intent.putExtra("id", item.id)
+                itemView.context.startActivity(intent)
+            }
         }
     }
 

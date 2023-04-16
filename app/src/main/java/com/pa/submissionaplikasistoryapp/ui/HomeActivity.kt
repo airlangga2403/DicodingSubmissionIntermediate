@@ -1,9 +1,15 @@
 package com.pa.submissionaplikasistoryapp.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.pa.submissionaplikasistoryapp.R
 import com.pa.submissionaplikasistoryapp.data.remote.response.ListStoryItem
 import com.pa.submissionaplikasistoryapp.databinding.ActivityHomeBinding
 import com.pa.submissionaplikasistoryapp.ui.adapter.ListStoryAdapter
@@ -28,19 +34,43 @@ class HomeActivity : AppCompatActivity() {
 
         binding.rvStoryList.layoutManager = LinearLayoutManager(this)
 
-//        viewModel.getAllStories(1, 10).observe(this) { response ->
-//            response.listStory?.let { listFollowing ->
-//                setUserListStory(listFollowing)
-//            }
-//        }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        val menuItem = menu!!.findItem(R.id.addstory)
+        menuItem.title = menuItem.titleCondensed
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.addstory -> {
+                true
+            }
+            R.id.logout -> {
+                // call the logoutUser function in the viewModel
+                viewModel.logoutUser()
+                Toast.makeText(this@HomeActivity, "User SucessFully Logout", Toast.LENGTH_SHORT)
+                    .show()
+                val intent = Intent(this@HomeActivity, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
 
     override fun onResume() {
         super.onResume()
-        viewModel.getAllStories(1, 10).observe(this) { response ->
+        showProgressBar(true)
+        viewModel.getAllStories(0, 20).observe(this) { response ->
             response.listStory?.let { listFollowing ->
                 setUserListStory(listFollowing)
             }
+            showProgressBar(false)
         }
     }
 
@@ -49,6 +79,15 @@ class HomeActivity : AppCompatActivity() {
         val adapter = ListStoryAdapter()
         adapter.submitList(listFollowing)
         binding.rvStoryList.adapter = adapter
+        showProgressBar(false)
 
+    }
+
+    private fun showProgressBar(loading: Boolean) {
+        if (loading) {
+            binding.progressbar.visibility = View.VISIBLE
+        } else {
+            binding.progressbar.visibility = View.GONE
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pa.submissionaplikasistoryapp.data.remote.pref.UserTokenPref
+import com.pa.submissionaplikasistoryapp.data.remote.response.ResponseGetDetailStories
 import com.pa.submissionaplikasistoryapp.data.remote.response.ResponseGetStories
 import com.pa.submissionaplikasistoryapp.data.remote.response.ResponseLogin
 import com.pa.submissionaplikasistoryapp.data.remote.response.ResponseRegister
@@ -44,17 +45,20 @@ class RegisterRepository private constructor(
         return data
     }
 
-        fun loginUser(email: String, password: String): LiveData<ResponseLogin> {
+    fun loginUser(email: String, password: String): LiveData<ResponseLogin> {
         val data = MutableLiveData<ResponseLogin>()
         try {
             val client = apiService.userLogin(email, password)
-            client.enqueue(object: Callback<ResponseLogin> {
+            client.enqueue(object : Callback<ResponseLogin> {
                 override fun onResponse(
                     call: Call<ResponseLogin>,
                     response: Response<ResponseLogin>
                 ) {
                     if (response.isSuccessful) {
-                        UserTokenPref.setToken(response.body()!!.loginResult.token)
+                        val token = response.body()?.loginResult?.token
+                        token?.let {
+                            UserTokenPref.setToken(token)
+                        }
                         data.value = response.body()
                     }
                 }
@@ -69,6 +73,7 @@ class RegisterRepository private constructor(
         }
         return data
     }
+
 
     fun getStories(page: Int, size: Int): LiveData<ResponseGetStories> {
         val client = apiService.getStories(page,size)
@@ -89,6 +94,32 @@ class RegisterRepository private constructor(
             }
         })
         return data
+    }
+
+    fun getDetailStory(id: String): LiveData<ResponseGetDetailStories> {
+        val data = MutableLiveData<ResponseGetDetailStories>()
+        val client = apiService.getStoryDetail(id)
+        client.enqueue(object: Callback<ResponseGetDetailStories>{
+            override fun onResponse(
+                call: Call<ResponseGetDetailStories>,
+                response: Response<ResponseGetDetailStories>
+            ) {
+                if (response.isSuccessful){
+                    data.value = response.body()
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseGetDetailStories>, t: Throwable) {
+                Log.e(TAG, "OnFailure : ${t.message.toString()}")
+            }
+        })
+        return data
+
+    }
+
+    fun logoutUser() {
+        UserTokenPref.setToken("")
+        UserTokenPref.setLoggedIn(false)
     }
 
     companion object {

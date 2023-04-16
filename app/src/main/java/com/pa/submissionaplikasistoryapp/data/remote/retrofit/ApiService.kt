@@ -27,4 +27,12 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("size") size: Int,
     ): Call<ResponseGetStories>
+
+    @GET("stories/{id}")
+    fun getStoryDetail(
+        @Path("id")
+        id : String
+    ): Call<ResponseGetDetailStories>
+
+
 }

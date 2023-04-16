@@ -55,13 +55,14 @@ class LoginActivity : AppCompatActivity() {
 //                SET SHARED PREF TO TRUE SESSION
                 showProgressBar(false)
                 UserTokenPref.setLoggedIn(true)
-                Toast.makeText(this, "User ${response.loginResult.name} Successfully Login}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "User ${response.loginResult.name} Successfully Login", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
+                finish()
             }
 
         })
-
     }
 
     private fun showProgressBar(loading: Boolean) {

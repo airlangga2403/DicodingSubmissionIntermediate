@@ -33,4 +33,5 @@ object UserTokenPref {
             putString(KEY_TOKEN, token)
         }
     }
+
 }
