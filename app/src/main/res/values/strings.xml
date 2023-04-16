@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Chat Story</string>
+    <string name="skip">Skip</string>
+    <string name="title_menu_1">Capture Your Moments</string>
+    <string name="desc_menu_1">Because Everyone Has A Story.</string>
+    <string name="title_menu_2">Upload Your Story</string>
+    <string name="desc_menu_2">Let your emotions run free with Chat Story- the ultimate chat story app.</string>
+    <string name="title_menu_3">Join With Us</string>
+    <string name="desc_menu_3">Lets start your journey.</string>
+    <string name="register">Register</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+</resources>
