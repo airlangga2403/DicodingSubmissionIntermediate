@@ -1,11 +1,11 @@
-
 package com.pa.submissionaplikasistoryapp.ui
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -35,36 +35,47 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        // Disable the button and set the text in MyButton to "Isi Dulu"
+        val myButton = binding.loginButton
+        myButton.isEnabled = false
+
+        setupTextWatchers()
+
         binding.loginButton.setOnClickListener {
             email = binding.email.text.toString().trim()
             password = binding.password.text.toString().trim()
             login(email!!, password!!)
         }
 
-        setupTextWatchers()
+        playAnimation()
+
+
     }
 
-    private fun login(email: String, password: String){
+    private fun login(email: String, password: String) {
         showProgressBar(true)
-        viewModel.loginUser(email, password).observe(this, { response ->
+        viewModel.loginUser(email, password).observe(this) { response ->
 
             if (response.error) {
                 Toast.makeText(this, "User Failed Login", Toast.LENGTH_SHORT).show()
                 showProgressBar(false)
-            } else if (response.loginResult != null) {
+            } else {
                 showProgressBar(false)
                 UserTokenPref.setLoggedIn(true)
-                Toast.makeText(this, "User ${response.loginResult.name} Successfully Login", Toast.LENGTH_SHORT).show()
+                UserTokenPref.setToken(response.loginResult.token)
+                Toast.makeText(
+                    this,
+                    "User ${response.loginResult.name} Successfully Login",
+                    Toast.LENGTH_SHORT
+                ).show()
                 val intent = Intent(this@LoginActivity, HomeActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
-            } else {
-                Toast.makeText(this, "Login failed due to invalid credentials", Toast.LENGTH_SHORT).show()
-                showProgressBar(false)
             }
 
-        })
+        }
     }
 
     private fun showProgressBar(loading: Boolean) {
@@ -75,7 +86,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupTextWatchers(){
+    private fun setupTextWatchers() {
         val editText1 = binding.email
         val editText2 = binding.password
         val button = binding.loginButton
@@ -115,6 +126,34 @@ class LoginActivity : AppCompatActivity() {
         val editText2Text = editText2.text.toString().trim()
         myButton.isEnabled =
             editText1Text.isNotEmpty() && editText2Text.isNotEmpty()
+    }
+
+    private fun playAnimation(){
+        ObjectAnimator.ofFloat(binding.logo, View.TRANSLATION_X, -30F, 30F).apply {
+            duration = 6000
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.REVERSE
+        }.start()
+
+        val email = ObjectAnimator.ofFloat(binding.email, View.ALPHA, 1f).setDuration(500)
+        val password = ObjectAnimator.ofFloat(binding.password, View.ALPHA, 1f).setDuration(500)
+
+        val emailText = ObjectAnimator.ofFloat(binding.emailText, View.ALPHA, 1f).setDuration(500)
+        val passwordText = ObjectAnimator.ofFloat(binding.passwordtext, View.ALPHA, 1f).setDuration(500)
+
+        val btn = ObjectAnimator.ofFloat(binding.loginButton, View.ALPHA, 1f).setDuration(500)
+
+        val together1 = AnimatorSet().apply {
+            playTogether(email,emailText)
+        }
+        val together2 = AnimatorSet().apply {
+            playTogether(password,passwordText)
+        }
+
+        AnimatorSet().apply {
+            playSequentially(together1,together2, btn)
+            startDelay = 500
+        }.start()
     }
 
 }

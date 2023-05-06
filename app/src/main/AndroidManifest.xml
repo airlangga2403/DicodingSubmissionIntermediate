@@ -4,10 +4,8 @@
     package="com.pa.submissionaplikasistoryapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -28,6 +26,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SubmissionAplikasiStoryApp"
         tools:targetApi="31">
+
         <activity
             android:name=".ui.CameraActivity"
             android:exported="false" />
@@ -58,6 +57,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+<!-- UPload Story -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.pa.submissionaplikasistoryapp"
@@ -65,10 +66,8 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
-
-
 
 </manifest>

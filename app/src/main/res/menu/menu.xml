@@ -10,6 +10,13 @@
         app:showAsAction="always"/>
 
     <item
+        android:id="@+id/settings"
+        android:title="@string/settings"
+        android:titleCondensed="@string/settings"
+        android:icon="@drawable/ic_baseline_settings_24"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/logout"
         android:title="@string/logout"
         android:titleCondensed="@string/logout"

@@ -1,4 +1,4 @@
-package com.pa.submissionaplikasistoryapp.ui
+package com.pa.submissionaplikasistoryapp.ui.custom_view
 
 import android.content.Context
 import android.graphics.Canvas
@@ -12,7 +12,8 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import com.pa.submissionaplikasistoryapp.R
 
-class MyEditText : AppCompatEditText, View.OnTouchListener {
+
+class MyEmailEditText : AppCompatEditText, View.OnTouchListener {
 
     private lateinit var clearButtonImage: Drawable
 
@@ -51,15 +52,14 @@ class MyEditText : AppCompatEditText, View.OnTouchListener {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                error = if (p0!!.length < 8 && p0.isNotEmpty()) {
-                    "Password must be greater than 8"
+
+                val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+".toRegex()
+                val isValid = p0!!.trim().matches(emailPattern)
+                if (!isValid) {
+                    error = "Email Format Incorrect"
                 } else {
-                    if(p0.toString().isNotEmpty()){
-                        showClearButton()
-                    } else {
-                        hideClearButton()
-                    }
-                    null
+                    if (p0.toString().isNotEmpty()) showClearButton() else hideClearButton()
+                    error = null
                 }
             }
 

@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -24,7 +25,7 @@ import com.pa.submissionaplikasistoryapp.ui.viewmodel.RegisterViewModel
 import com.pa.submissionaplikasistoryapp.ui.viewmodel.RegisterViewModelFactory
 import com.pa.submissionaplikasistoryapp.utils.createCustomTempFile
 import com.pa.submissionaplikasistoryapp.utils.reduceFileImage
-import com.pa.submissionaplikasistoryapp.utils.rotateBitmap
+import com.pa.submissionaplikasistoryapp.utils.rotateFile
 import com.pa.submissionaplikasistoryapp.utils.uriToFile
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -84,6 +85,14 @@ class AddStoryActivity : AppCompatActivity() {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
+        // Check for camera permission
+        if (!allPermissionsGranted()) {
+            ActivityCompat.requestPermissions(
+                this,
+                REQUIRED_PERMISSIONS,
+                REQUEST_CODE_PERMISSIONS
+            )
+        }
 
         binding.cameraXButton.setOnClickListener { startCameraX() }
         binding.cameraButton.setOnClickListener { startTakePhoto() }
@@ -155,14 +164,16 @@ class AddStoryActivity : AppCompatActivity() {
     }
 
     private fun uploadImage(location: Location) {
-        showProgressBar(true)
-        if (getFile != null) {
+        val desc = binding.etDescription.text.toString()
+        if (getFile != null && desc.isNotEmpty()) {
+            showProgressBar(true)
 
             val file = reduceFileImage(getFile as File)
 
             val description =
                 binding.etDescription.text.toString()
                     .toRequestBody("text/plain".toMediaType())
+
             val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
                 "photo",
@@ -183,16 +194,24 @@ class AddStoryActivity : AppCompatActivity() {
                 multiForm
             ).observe(this) { response ->
                 if (response.error) {
-                    Toast.makeText(this@AddStoryActivity, "Failed Upload Story", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@AddStoryActivity, "Failed Upload Story", Toast.LENGTH_SHORT)
+                        .show()
                     showProgressBar(false)
                 } else {
                     showProgressBar(false)
-                    Toast.makeText(this@AddStoryActivity, "Sucessfuly Upload Story", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@AddStoryActivity,
+                        "Sucessfuly Upload Story",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     val intent = Intent(this@AddStoryActivity, HomeActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)
-
+                    finish()
                 }
             }
+        } else {
+            Toast.makeText(this@AddStoryActivity,"Add Desc and File First", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -233,14 +252,9 @@ class AddStoryActivity : AppCompatActivity() {
             val myFile = it.data?.getSerializableExtra("picture") as File
             val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
 
-            val result = rotateBitmap(
-                BitmapFactory.decodeFile(myFile.path),
-                isBackCamera
 
-            )
-
-            myFile?.let { file ->
-//                rotateFile(file, isBackCamera)
+            myFile.let { file ->
+                rotateFile(file, isBackCamera)
                 getFile = file
                 binding.previewImageView.setImageBitmap(BitmapFactory.decodeFile(file.path))
             }
@@ -254,16 +268,9 @@ class AddStoryActivity : AppCompatActivity() {
         if (it.resultCode == RESULT_OK) {
             val myFile = File(currentPhotoPath)
 
-//            val result =  BitmapFactory.decodeFile(myFile.path)
-//            Silakan gunakan kode ini jika mengalami perubahan rotasi
-            val result = rotateBitmap(
-                BitmapFactory.decodeFile(myFile.path),
-                true
-            )
-
-            myFile?.let { file ->
+            myFile.let { file ->
                 getFile = file
-                binding.previewImageView.setImageBitmap(result)
+                binding.previewImageView.setImageBitmap(BitmapFactory.decodeFile(myFile.path))
             }
         }
     }
@@ -273,7 +280,6 @@ class AddStoryActivity : AppCompatActivity() {
     ) { result ->
         if (result.resultCode == RESULT_OK) {
             val selectedImg: Uri = result.data?.data as Uri
-//            val myFile = uriToFile(selectedImg, this@MainActivity)
             selectedImg.let { uri ->
                 val myFile = uriToFile(uri, this@AddStoryActivity)
                 getFile = myFile
@@ -289,7 +295,6 @@ class AddStoryActivity : AppCompatActivity() {
             binding.progressbar.visibility = View.GONE
         }
     }
-
 
 
 }

@@ -1,5 +1,7 @@
 package com.pa.submissionaplikasistoryapp.ui
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -10,7 +12,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import com.pa.submissionaplikasistoryapp.databinding.ActivityRegisterBinding
 import com.pa.submissionaplikasistoryapp.ui.viewmodel.RegisterViewModel
 import com.pa.submissionaplikasistoryapp.ui.viewmodel.RegisterViewModelFactory
@@ -36,7 +37,9 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         supportActionBar?.title = "Register"
+
 
         // Disable the button and set the text in MyButton to "Isi Dulu"
         val myButton = binding.registerButton
@@ -50,11 +53,13 @@ class RegisterActivity : AppCompatActivity() {
             registUser(name!!, email!!, password!!)
         }
 
+        playAnimation()
+
     }
 
     private fun registUser(name: String, email: String, password: String) {
         showProgressBar(true)
-        viewModel.registerUser(name, email, password).observe(this, { response ->
+        viewModel.registerUser(name, email, password).observe(this) { response ->
             if (response.error) {
                 Toast.makeText(
                     this@RegisterActivity,
@@ -74,7 +79,7 @@ class RegisterActivity : AppCompatActivity() {
             }
 
 
-        })
+        }
 
     }
 
@@ -113,6 +118,7 @@ class RegisterActivity : AppCompatActivity() {
                 setMyButtonEnable(editText1, editText2, editText3, myButton)
             }
 
+
             override fun afterTextChanged(s: Editable) {
             }
         })
@@ -142,6 +148,39 @@ class RegisterActivity : AppCompatActivity() {
 
         myButton.isEnabled =
             editText1Text.isNotEmpty() && editText2Text.isNotEmpty() && editText3Text.isNotEmpty()
+    }
+
+    private fun playAnimation(){
+        ObjectAnimator.ofFloat(binding.logo, View.TRANSLATION_X, -30F, 30F).apply {
+            duration = 6000
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.REVERSE
+        }.start()
+
+        val name = ObjectAnimator.ofFloat(binding.name, View.ALPHA, 1f).setDuration(500)
+        val email = ObjectAnimator.ofFloat(binding.email, View.ALPHA, 1f).setDuration(500)
+        val password = ObjectAnimator.ofFloat(binding.password, View.ALPHA, 1f).setDuration(500)
+
+        val nameText = ObjectAnimator.ofFloat(binding.nameText, View.ALPHA, 1f).setDuration(500)
+        val emailText = ObjectAnimator.ofFloat(binding.emailText, View.ALPHA, 1f).setDuration(500)
+        val passwordText = ObjectAnimator.ofFloat(binding.passwordtext, View.ALPHA, 1f).setDuration(500)
+
+        val btn = ObjectAnimator.ofFloat(binding.registerButton, View.ALPHA, 1f).setDuration(500)
+
+        val together1 = AnimatorSet().apply {
+            playTogether(name,nameText)
+        }
+        val together2 = AnimatorSet().apply {
+            playTogether(email,emailText)
+        }
+        val together3 = AnimatorSet().apply {
+            playTogether(password,passwordText)
+        }
+
+        AnimatorSet().apply {
+            playSequentially(together1,together2,together3, btn)
+            startDelay = 500
+        }.start()
     }
 
 

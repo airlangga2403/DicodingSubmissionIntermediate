@@ -1,6 +1,7 @@
 package com.pa.submissionaplikasistoryapp.data.remote.retrofit
 
 
+import com.pa.submissionaplikasistoryapp.data.remote.pref.UserTokenPref
 import com.pa.submissionaplikasistoryapp.data.remote.response.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -27,12 +28,14 @@ interface ApiService {
     fun getStories(
         @Query("page") page: Int,
         @Query("size") size: Int,
+        @Header("Authorization") token: String = "Bearer ${UserTokenPref.getToken()}"
     ): Call<ResponseGetStories>
 
     @GET("stories/{id}")
     fun getStoryDetail(
         @Path("id")
-        id : String
+        id : String,
+        @Header("Authorization") token: String = "Bearer ${UserTokenPref.getToken()}"
     ): Call<ResponseGetDetailStories>
 
     @Multipart
@@ -43,6 +46,7 @@ interface ApiService {
         @Part("lat") lat: Double?,
         @Part("lon") lon: Double?,
         @Header("Accept") type: String,
+        @Header("Authorization") token: String = "Bearer ${UserTokenPref.getToken()}"
     ): Call<ResponseUploadStory>
 
 

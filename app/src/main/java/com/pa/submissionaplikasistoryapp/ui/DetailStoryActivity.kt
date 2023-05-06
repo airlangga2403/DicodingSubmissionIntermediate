@@ -1,7 +1,6 @@
 package com.pa.submissionaplikasistoryapp.ui
 
 import android.os.Bundle
-import android.view.RoundedCorner
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
@@ -45,9 +44,11 @@ class DetailStoryActivity : AppCompatActivity() {
                 .transform(RoundedCorners(5))
                 .apply(RequestOptions().override(200, 200))
                 .into(binding.tvDetailImage)
-            binding.titleDetailName.text = response.story.name
-            binding.descriptionTitleDetail.text = response.story.description
-            binding.createdAtDetail.text = response.story.createdAt
+            binding?.apply {
+                titleDetailName.text = response.story.name
+                descriptionTitleDetail.text = response.story.description
+                createdAtDetail.text = response.story.createdAt
+            }
 
         }
     }

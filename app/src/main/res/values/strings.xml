@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Chat Story</string>
+    <string name="app_name" translatable="false">Chat Story</string>
     <string name="skip">Skip</string>
     <string name="title_menu_1">Capture Your Moments</string>
     <string name="desc_menu_1">Because Everyone Has A Story.</string>
@@ -14,14 +14,17 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="add_story">Add Your Story</string>
+    <string name="settings">Settings</string>
     <string name="logout">Logout</string>
 
     <string name="description">Description</string>
     <string name="created_at">Created Date</string>
 
     <string name="camera_x">CameraX</string>
-    <string name="camera">Kamera</string>
-    <string name="gallery">Galeri</string>
-    <string name="upload">Unggah</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Galery</string>
+    <string name="upload">Upload</string>
+    <string name="image">Image</string>
+    <string name="fill">Fill it first</string>
 
 </resources>

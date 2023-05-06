@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pa.submissionaplikasistoryapp.data.remote.pref.UserTokenPref
 import com.pa.submissionaplikasistoryapp.data.remote.response.*
+import com.pa.submissionaplikasistoryapp.data.remote.retrofit.ApiConfig
 import com.pa.submissionaplikasistoryapp.data.remote.retrofit.ApiService
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -27,7 +28,7 @@ class RegisterRepository private constructor(
                     if (response.isSuccessful) {
                         val responseBody = response.body()
                         if (responseBody != null) {
-                            data.value = responseBody!!
+                            data.value = responseBody
                         } else {
                             data.value =
                                 ResponseRegister(error = true, message = "Invalid credentials")
@@ -52,52 +53,43 @@ class RegisterRepository private constructor(
 
     fun loginUser(email: String, password: String): LiveData<ResponseLogin> {
         val data = MutableLiveData<ResponseLogin>()
-        try {
-            val client = apiService.userLogin(email, password)
-            client.enqueue(object : Callback<ResponseLogin> {
-                override fun onResponse(
-                    call: Call<ResponseLogin>,
-                    response: Response<ResponseLogin>
-                ) {
-                    if (response.isSuccessful) {
-                        val loginResult = response.body()?.loginResult
-                        if (loginResult != null) {
-                            data.value = response.body()
-                            val token = loginResult.token
-                            token?.let {
-                                UserTokenPref.setToken(token)
-                            }
-                        } else {
-                            data.value = ResponseLogin(
-                                LoginResult("", "", ""),
-                                error = true,
-                                message = "Invalid credentials"
-                            )
-
-                        }
+        val client = apiService.userLogin(email, password)
+        client.enqueue(object : Callback<ResponseLogin> {
+            override fun onResponse(call: Call<ResponseLogin>, response: Response<ResponseLogin>) {
+                if (response.isSuccessful) {
+                    val loginResult = response.body()?.loginResult
+                    if (loginResult != null) {
+                        data.value = response.body()
                     } else {
                         data.value = ResponseLogin(
                             LoginResult("", "", ""),
                             error = true,
                             message = "Invalid credentials"
                         )
-
                     }
+                } else {
+                    data.value = ResponseLogin(
+                        LoginResult("", "", ""),
+                        error = true,
+                        message = "Invalid credentials"
+                    )
                 }
+            }
 
-                override fun onFailure(call: Call<ResponseLogin>, t: Throwable) {
-                    Log.e(TAG, "onFailure: ${t.message}")
-                }
-            })
-
-        } catch (e: Exception) {
-            Log.e(TAG, "onFailure: ${e.message}")
-        }
+            override fun onFailure(call: Call<ResponseLogin>, t: Throwable) {
+                Log.e(TAG, "onFailure: ${t.message}")
+                data.value = ResponseLogin(
+                    LoginResult("", "", ""),
+                    error = true,
+                    message = "Failed to connect to the server"
+                )
+            }
+        })
         return data
     }
 
     fun getStories(page: Int, size: Int): LiveData<ResponseGetStories> {
-        val client = apiService.getStories(page, size)
+        val client = ApiConfig.getApiService().getStories(page, size)
         val data = MutableLiveData<ResponseGetStories>()
         client.enqueue(object : Callback<ResponseGetStories> {
             override fun onResponse(
@@ -171,7 +163,7 @@ class RegisterRepository private constructor(
     }
 
     fun logoutUser() {
-        UserTokenPref.setToken("")
+        UserTokenPref.setToken("token")
         UserTokenPref.setLoggedIn(false)
     }
 

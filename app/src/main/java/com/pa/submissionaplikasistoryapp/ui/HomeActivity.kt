@@ -2,6 +2,7 @@ package com.pa.submissionaplikasistoryapp.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -34,6 +35,14 @@ class HomeActivity : AppCompatActivity() {
 
         binding.rvStoryList.layoutManager = LinearLayoutManager(this)
 
+        showProgressBar(true)
+        viewModel.getAllStories(0, 20).observe(this) { response ->
+            response.listStory.let { listFollowing ->
+                setUserListStory(listFollowing)
+            }
+            showProgressBar(false)
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -50,29 +59,22 @@ class HomeActivity : AppCompatActivity() {
                 startActivity(intent)
                 true
             }
+            R.id.settings -> {
+                startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+                true
+            }
             R.id.logout -> {
                 // call the logoutUser function in the viewModel
                 viewModel.logoutUser()
                 Toast.makeText(this@HomeActivity, "User SucessFully Logout", Toast.LENGTH_SHORT)
                     .show()
                 val intent = Intent(this@HomeActivity, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
                 finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-        showProgressBar(true)
-        viewModel.getAllStories(0, 20).observe(this) { response ->
-            response.listStory?.let { listFollowing ->
-                setUserListStory(listFollowing)
-            }
-            showProgressBar(false)
         }
     }
 

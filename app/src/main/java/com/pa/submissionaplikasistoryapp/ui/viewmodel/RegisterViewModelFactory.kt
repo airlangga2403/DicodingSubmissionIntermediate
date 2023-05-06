@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.pa.submissionaplikasistoryapp.data.remote.di.Injection
 import com.pa.submissionaplikasistoryapp.data.repository.RegisterRepository
-import java.lang.IllegalArgumentException
 
 class RegisterViewModelFactory private constructor(private val registerRepository: RegisterRepository) :
     ViewModelProvider.NewInstanceFactory() {

@@ -8,6 +8,7 @@ import android.view.Gravity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import com.pa.submissionaplikasistoryapp.R
+
 class MyButton : AppCompatButton {
 
     private lateinit var enableBackground: Drawable
@@ -36,7 +37,7 @@ class MyButton : AppCompatButton {
         setTextColor(txtColor)
         textSize = 12f
         gravity = Gravity.CENTER
-        text = if (isEnabled) originalText else "Isi Dulu" // mengembalikan nilai teks asli jika tombol di-disable
+        text = if (isEnabled) originalText else context.getString(R.string.fill) // mengembalikan nilai teks asli jika tombol di-disable
     }
 
     private fun init() {
