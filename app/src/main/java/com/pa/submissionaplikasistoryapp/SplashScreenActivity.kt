@@ -10,10 +10,10 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.airbnb.lottie.LottieAnimationView
 import com.pa.submissionaplikasistoryapp.data.remote.pref.UserTokenPref
 import com.pa.submissionaplikasistoryapp.ui.HomeActivity
 import com.pa.submissionaplikasistoryapp.ui.OnBoardingActivity
-import com.airbnb.lottie.LottieAnimationView
 
 @SuppressLint("CustomSplashScreen")
 class SplashScreenActivity : AppCompatActivity() {
@@ -24,8 +24,7 @@ class SplashScreenActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash_screen)
 
         setupView()
-        
-        
+
 
         val animationView: LottieAnimationView = findViewById(R.id.animationView)
         animationView.setAnimation("splash_lottie.json")

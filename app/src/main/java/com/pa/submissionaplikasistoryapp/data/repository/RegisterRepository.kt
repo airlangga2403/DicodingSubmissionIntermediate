@@ -3,10 +3,13 @@ package com.pa.submissionaplikasistoryapp.data.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.*
+import com.pa.submissionaplikasistoryapp.data.paging.StoryRemoteMediator
 import com.pa.submissionaplikasistoryapp.data.remote.pref.UserTokenPref
 import com.pa.submissionaplikasistoryapp.data.remote.response.*
-import com.pa.submissionaplikasistoryapp.data.remote.retrofit.ApiConfig
 import com.pa.submissionaplikasistoryapp.data.remote.retrofit.ApiService
+import com.pa.submissionaplikasistoryapp.database.StoryDatabase
+import com.pa.submissionaplikasistoryapp.database.StoryLocation
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -14,6 +17,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class RegisterRepository private constructor(
+    private val database: StoryDatabase,
     private val apiService: ApiService
 ) {
     fun registerUser(name: String, email: String, password: String): LiveData<ResponseRegister> {
@@ -88,26 +92,17 @@ class RegisterRepository private constructor(
         return data
     }
 
-    fun getStories(page: Int, size: Int): LiveData<ResponseGetStories> {
-        val client = ApiConfig.getApiService().getStories(page, size)
-        val data = MutableLiveData<ResponseGetStories>()
-        client.enqueue(object : Callback<ResponseGetStories> {
-            override fun onResponse(
-                call: Call<ResponseGetStories>,
-                response: Response<ResponseGetStories>
-            ) {
-                if (response.isSuccessful) {
-                    data.value = response.body()
-                }
 
-            }
-
-            override fun onFailure(call: Call<ResponseGetStories>, t: Throwable) {
-                Log.e(TAG, t.message.toString())
-            }
-        })
-        return data
+    fun getStories(): LiveData<PagingData<ListStoryItem>> {
+        @OptIn(ExperimentalPagingApi::class)
+        return Pager(
+            config = PagingConfig(pageSize = 5, enablePlaceholders = false),
+            remoteMediator = StoryRemoteMediator(database, apiService)
+        ) {
+            database.storyDao().getAllStory()
+        }.liveData
     }
+
 
     fun getDetailStory(id: String): LiveData<ResponseGetDetailStories> {
         val data = MutableLiveData<ResponseGetDetailStories>()
@@ -139,24 +134,54 @@ class RegisterRepository private constructor(
     ): LiveData<ResponseUploadStory> {
         val data = MutableLiveData<ResponseUploadStory>()
         val client = apiService.uploadStory(file, description, lat, lon, multiPort)
-        client.enqueue(object: Callback<ResponseUploadStory> {
+        client.enqueue(object : Callback<ResponseUploadStory> {
             override fun onResponse(
                 call: Call<ResponseUploadStory>,
                 response: Response<ResponseUploadStory>
             ) {
-               if (response.isSuccessful) {
-                   val responseBody = response.body()
-                   if (responseBody != null ) {
-                       data.value = response.body()
-                   } else {
-                       data.value = response.body()
-                   }
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        data.value = response.body()
+                    } else {
+                        data.value = response.body()
+                    }
 
-               }
+                }
             }
 
             override fun onFailure(call: Call<ResponseUploadStory>, t: Throwable) {
-               Log.e(TAG, "OnFailure : ${t.message.toString()}")
+                Log.e(TAG, "OnFailure : ${t.message.toString()}")
+            }
+        })
+        return data
+    }
+
+    fun uploadStoryWithoutLocation(
+        file: MultipartBody.Part,
+        description: RequestBody,
+        multiPort: String
+    ): LiveData<ResponseUploadStory> {
+        val data = MutableLiveData<ResponseUploadStory>()
+        val client = apiService.uploadStoryWithoutLocation(file, description, multiPort)
+        client.enqueue(object : Callback<ResponseUploadStory> {
+            override fun onResponse(
+                call: Call<ResponseUploadStory>,
+                response: Response<ResponseUploadStory>
+            ) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        data.value = response.body()
+                    } else {
+                        data.value = response.body()
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseUploadStory>, t: Throwable) {
+                Log.e(TAG, "OnFailure : ${t.message.toString()}")
             }
         })
         return data
@@ -167,16 +192,20 @@ class RegisterRepository private constructor(
         UserTokenPref.setLoggedIn(false)
     }
 
+    fun getLocationUser(): LiveData<List<StoryLocation>> = database.storyDao().getUserLocation()
+
+
     companion object {
-        private val TAG = "RegisterRepository"
+        private const val TAG = "RegisterRepository"
 
         @Volatile
         private var instance: RegisterRepository? = null
         fun getInstance(
+            database: StoryDatabase,
             apiService: ApiService
         ): RegisterRepository =
             instance ?: synchronized(this) {
-                instance ?: RegisterRepository(apiService)
+                instance ?: RegisterRepository(database, apiService)
             }.also { instance = it }
     }
 

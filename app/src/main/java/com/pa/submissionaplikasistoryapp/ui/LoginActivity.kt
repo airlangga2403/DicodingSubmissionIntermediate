@@ -128,7 +128,7 @@ class LoginActivity : AppCompatActivity() {
             editText1Text.isNotEmpty() && editText2Text.isNotEmpty()
     }
 
-    private fun playAnimation(){
+    private fun playAnimation() {
         ObjectAnimator.ofFloat(binding.logo, View.TRANSLATION_X, -30F, 30F).apply {
             duration = 6000
             repeatCount = ObjectAnimator.INFINITE
@@ -139,19 +139,20 @@ class LoginActivity : AppCompatActivity() {
         val password = ObjectAnimator.ofFloat(binding.password, View.ALPHA, 1f).setDuration(500)
 
         val emailText = ObjectAnimator.ofFloat(binding.emailText, View.ALPHA, 1f).setDuration(500)
-        val passwordText = ObjectAnimator.ofFloat(binding.passwordtext, View.ALPHA, 1f).setDuration(500)
+        val passwordText =
+            ObjectAnimator.ofFloat(binding.passwordtext, View.ALPHA, 1f).setDuration(500)
 
         val btn = ObjectAnimator.ofFloat(binding.loginButton, View.ALPHA, 1f).setDuration(500)
 
         val together1 = AnimatorSet().apply {
-            playTogether(email,emailText)
+            playTogether(email, emailText)
         }
         val together2 = AnimatorSet().apply {
-            playTogether(password,passwordText)
+            playTogether(password, passwordText)
         }
 
         AnimatorSet().apply {
-            playSequentially(together1,together2, btn)
+            playSequentially(together1, together2, btn)
             startDelay = 500
         }.start()
     }

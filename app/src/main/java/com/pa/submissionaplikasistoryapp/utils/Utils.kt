@@ -10,7 +10,13 @@ import android.net.Uri
 import android.os.Environment
 import com.pa.submissionaplikasistoryapp.R
 import java.io.*
+import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.*
 
 private const val FILENAME_FORMAT = "dd-MMM-yyyy"
@@ -40,6 +46,18 @@ fun reduceFileImage(file: File): File {
     return file
 }
 
+fun dateFormat(dateTimeString: String): String {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+    val outputFormat = SimpleDateFormat("HH:mm:ss EEE, dd/MM/yyyy", Locale.US)
+
+    return try {
+        val date = inputFormat.parse(dateTimeString)
+        outputFormat.format(date)
+    } catch (e: Exception) {
+        "Invalid Date"
+    }
+}
+
 fun createFile(application: Application): File {
     val mediaDir = application.externalMediaDirs.firstOrNull()?.let {
         File(it, application.resources.getString(R.string.app_name)).apply { mkdirs() }
@@ -62,34 +80,6 @@ fun rotateFile(file: File, isBackCamera: Boolean = false) {
     }
     val result = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     result.compress(Bitmap.CompressFormat.JPEG, 100, FileOutputStream(file))
-}
-
-fun rotateBitmap(bitmap: Bitmap, isBackCamera: Boolean = false): Bitmap {
-    val matrix = Matrix()
-    return if (isBackCamera) {
-        matrix.postRotate(90f)
-        Bitmap.createBitmap(
-            bitmap,
-            0,
-            0,
-            bitmap.width,
-            bitmap.height,
-            matrix,
-            true
-        )
-    } else {
-        matrix.postRotate(-90f)
-        matrix.postScale(-1f, 1f, bitmap.width / 2f, bitmap.height / 2f)
-        Bitmap.createBitmap(
-            bitmap,
-            0,
-            0,
-            bitmap.width,
-            bitmap.height,
-            matrix,
-            true
-        )
-    }
 }
 
 fun uriToFile(selectedImg: Uri, context: Context): File {

@@ -11,9 +11,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pa.submissionaplikasistoryapp.R
-import com.pa.submissionaplikasistoryapp.data.remote.response.ListStoryItem
 import com.pa.submissionaplikasistoryapp.databinding.ActivityHomeBinding
 import com.pa.submissionaplikasistoryapp.ui.adapter.ListStoryAdapter
+import com.pa.submissionaplikasistoryapp.ui.adapter.LoadingStateAdapter
 import com.pa.submissionaplikasistoryapp.ui.viewmodel.RegisterViewModel
 import com.pa.submissionaplikasistoryapp.ui.viewmodel.RegisterViewModelFactory
 
@@ -34,12 +34,19 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.rvStoryList.layoutManager = LinearLayoutManager(this)
+        getData()
+    }
 
+    private fun getData() {
         showProgressBar(true)
-        viewModel.getAllStories(0, 20).observe(this) { response ->
-            response.listStory.let { listFollowing ->
-                setUserListStory(listFollowing)
+        val adapter = ListStoryAdapter()
+        binding.rvStoryList.adapter = adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                adapter.retry()
             }
+        )
+        viewModel.getStories().observe(this) {
+            adapter.submitData(lifecycle, it)
             showProgressBar(false)
         }
 
@@ -74,18 +81,16 @@ class HomeActivity : AppCompatActivity() {
                 finish()
                 true
             }
+
+            R.id.maps -> {
+                val intent = Intent(this@HomeActivity, MapsActivity::class.java)
+                startActivity(intent)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-
-    private fun setUserListStory(listFollowing: List<ListStoryItem>) {
-        val adapter = ListStoryAdapter()
-        adapter.submitList(listFollowing)
-        binding.rvStoryList.adapter = adapter
-        showProgressBar(false)
-
-    }
 
     private fun showProgressBar(loading: Boolean) {
         if (loading) {

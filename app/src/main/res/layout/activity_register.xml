@@ -82,7 +82,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="20dp" />
 
-    <com.pa.submissionaplikasistoryapp.ui.MyEditText
+    <com.pa.submissionaplikasistoryapp.ui.custom_view.MyEditText
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
         android:textColor="@color/white"
         android:textColorHint="@color/white" />
 
-    <com.pa.submissionaplikasistoryapp.ui.MyButton
+    <com.pa.submissionaplikasistoryapp.ui.custom_view.MyButton
         android:id="@+id/register_button"
         android:layout_width="match_parent"
         android:alpha="0"

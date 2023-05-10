@@ -1,4 +1,4 @@
-package com.pa.submissionaplikasistoryapp.ui
+package com.pa.submissionaplikasistoryapp.ui.custom_view
 
 import android.content.Context
 import android.graphics.Canvas
@@ -26,7 +26,11 @@ class MyButton : AppCompatButton {
         originalText = text // menyimpan nilai teks asli
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         init()
         originalText = text // menyimpan nilai teks asli
     }
@@ -37,12 +41,14 @@ class MyButton : AppCompatButton {
         setTextColor(txtColor)
         textSize = 12f
         gravity = Gravity.CENTER
-        text = if (isEnabled) originalText else context.getString(R.string.fill) // mengembalikan nilai teks asli jika tombol di-disable
+        text =
+            if (isEnabled) originalText else context.getString(R.string.fill) // mengembalikan nilai teks asli jika tombol di-disable
     }
 
     private fun init() {
         txtColor = ContextCompat.getColor(context, android.R.color.background_light)
         enableBackground = ContextCompat.getDrawable(context, R.drawable.bg_button) as Drawable
-        disableBackground = ContextCompat.getDrawable(context, R.drawable.bg_button_disable) as Drawable
+        disableBackground =
+            ContextCompat.getDrawable(context, R.drawable.bg_button_disable) as Drawable
     }
 }

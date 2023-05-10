@@ -55,11 +55,11 @@ class MyEmailEditText : AppCompatEditText, View.OnTouchListener {
 
                 val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+".toRegex()
                 val isValid = p0!!.trim().matches(emailPattern)
-                if (!isValid) {
-                    error = "Email Format Incorrect"
+                error = if (!isValid) {
+                    "Email Format Incorrect"
                 } else {
                     if (p0.toString().isNotEmpty()) showClearButton() else hideClearButton()
-                    error = null
+                    null
                 }
             }
 
@@ -83,9 +83,15 @@ class MyEmailEditText : AppCompatEditText, View.OnTouchListener {
         endOfTheText: Drawable? = null,
         bottomOfTheText: Drawable? = null
     ) {
-        setCompoundDrawablesWithIntrinsicBounds(startOfTheText, topOfTheText, endOfTheText, bottomOfTheText)
+        setCompoundDrawablesWithIntrinsicBounds(
+            startOfTheText,
+            topOfTheText,
+            endOfTheText,
+            bottomOfTheText
+        )
 
     }
+
     override fun onTouch(p0: View?, p1: MotionEvent): Boolean {
         if (compoundDrawables[2] != null) {
             val clearButtonStart: Float

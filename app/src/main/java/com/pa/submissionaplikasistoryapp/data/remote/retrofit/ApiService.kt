@@ -25,16 +25,17 @@ interface ApiService {
     ): Call<ResponseLogin>
 
     @GET("stories")
-    fun getStories(
+    suspend fun getStories(
         @Query("page") page: Int,
         @Query("size") size: Int,
         @Header("Authorization") token: String = "Bearer ${UserTokenPref.getToken()}"
-    ): Call<ResponseGetStories>
+    ): ResponseGetStories
+
 
     @GET("stories/{id}")
     fun getStoryDetail(
         @Path("id")
-        id : String,
+        id: String,
         @Header("Authorization") token: String = "Bearer ${UserTokenPref.getToken()}"
     ): Call<ResponseGetDetailStories>
 
@@ -45,6 +46,15 @@ interface ApiService {
         @Part("description") description: RequestBody,
         @Part("lat") lat: Double?,
         @Part("lon") lon: Double?,
+        @Header("Accept") type: String,
+        @Header("Authorization") token: String = "Bearer ${UserTokenPref.getToken()}"
+    ): Call<ResponseUploadStory>
+
+    @Multipart
+    @POST("stories")
+    fun uploadStoryWithoutLocation(
+        @Part file: MultipartBody.Part,
+        @Part("description") description: RequestBody,
         @Header("Accept") type: String,
         @Header("Authorization") token: String = "Bearer ${UserTokenPref.getToken()}"
     ): Call<ResponseUploadStory>

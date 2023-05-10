@@ -1,4 +1,4 @@
-package com.pa.submissionaplikasistoryapp.ui
+package com.pa.submissionaplikasistoryapp.ui.custom_view
 
 import android.content.Context
 import android.graphics.Canvas
@@ -54,7 +54,7 @@ class MyEditText : AppCompatEditText, View.OnTouchListener {
                 error = if (p0!!.length < 8 && p0.isNotEmpty()) {
                     "Password must be greater than 8"
                 } else {
-                    if(p0.toString().isNotEmpty()){
+                    if (p0.toString().isNotEmpty()) {
                         showClearButton()
                     } else {
                         hideClearButton()
@@ -83,9 +83,15 @@ class MyEditText : AppCompatEditText, View.OnTouchListener {
         endOfTheText: Drawable? = null,
         bottomOfTheText: Drawable? = null
     ) {
-        setCompoundDrawablesWithIntrinsicBounds(startOfTheText, topOfTheText, endOfTheText, bottomOfTheText)
+        setCompoundDrawablesWithIntrinsicBounds(
+            startOfTheText,
+            topOfTheText,
+            endOfTheText,
+            bottomOfTheText
+        )
 
     }
+
     override fun onTouch(p0: View?, p1: MotionEvent): Boolean {
         if (compoundDrawables[2] != null) {
             val clearButtonStart: Float

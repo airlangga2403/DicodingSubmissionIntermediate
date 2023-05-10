@@ -11,18 +11,22 @@
         <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/drawable/ic_capture.xml" value="0.3155" />
         <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/drawable/ic_place_holder.xml" value="0.3155" />
         <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/drawable/rounded_corner.xml" value="0.3155" />
-        <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/layout/activity_add_story.xml" value="0.33" />
+        <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/drawable/rounded_corner_btn.xml" value="0.1995" />
+        <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/drawable/rounded_corners_btn.xml" value="0.1985" />
+        <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/layout/activity_add_story.xml" value="0.18807339449541285" />
         <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/layout/activity_camera.xml" value="0.30978260869565216" />
         <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/layout/activity_detail_story.xml" value="0.19166666666666668" />
         <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/layout/activity_home.xml" value="0.25815217391304346" />
         <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/layout/activity_login.xml" value="0.25815217391304346" />
+        <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/layout/activity_maps.xml" value="0.19166666666666668" />
         <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/layout/activity_on_boarding.xml" value="0.33" />
         <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/layout/activity_register.xml" value="0.33" />
         <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/layout/activity_splash_screen.xml" value="0.2753623188405797" />
+        <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/layout/item_loading.xml" value="0.33" />
         <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/layout/list_item_story.xml" value="0.190625" />
         <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/layout/story_widget.xml" value="0.30978260869565216" />
         <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/layout/widget_item.xml" value="0.30978260869565216" />
-        <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/menu/menu.xml" value="0.190625" />
+        <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/menu/menu.xml" value="0.22" />
         <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1995" />
         <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1995" />
         <entry key="..\:/Users/Zeeus/AndroidStudioProjects/SubmissionAplikasiStoryApp/app/src/main/res/xml/activity_onboarding_scene.xml" value="0.19166666666666668" />

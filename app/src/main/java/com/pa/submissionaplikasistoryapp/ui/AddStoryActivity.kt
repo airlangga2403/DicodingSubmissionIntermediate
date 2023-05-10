@@ -1,6 +1,7 @@
 package com.pa.submissionaplikasistoryapp.ui
 
 import android.Manifest
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
@@ -13,6 +14,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -20,6 +22,7 @@ import androidx.core.content.FileProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
+import com.pa.submissionaplikasistoryapp.R
 import com.pa.submissionaplikasistoryapp.databinding.ActivityAddStoryBinding
 import com.pa.submissionaplikasistoryapp.ui.viewmodel.RegisterViewModel
 import com.pa.submissionaplikasistoryapp.ui.viewmodel.RegisterViewModelFactory
@@ -97,7 +100,21 @@ class AddStoryActivity : AppCompatActivity() {
         binding.cameraXButton.setOnClickListener { startCameraX() }
         binding.cameraButton.setOnClickListener { startTakePhoto() }
         binding.galleryButton.setOnClickListener { startGallery() }
-        binding.uploadButton.setOnClickListener { getLocation() }
+        binding.uploadButton.setOnClickListener {
+            val alertDialogBuilder = AlertDialog.Builder(this)
+            alertDialogBuilder.setTitle(getString(R.string.dialog_title))
+            alertDialogBuilder.setMessage(getString(R.string.dialog_message))
+            alertDialogBuilder.setPositiveButton(getString(R.string.yes)) { _: DialogInterface, _: Int ->
+                getLocation()
+            }
+            alertDialogBuilder.setNegativeButton(getString(R.string.no)) { _: DialogInterface, _: Int ->
+                uploadImageWithoutLocation()
+            }
+            // Menampilkan AlertDialog
+            val alertDialog = alertDialogBuilder.create()
+            alertDialog.show()
+
+        }
 
 
     }
@@ -211,7 +228,64 @@ class AddStoryActivity : AppCompatActivity() {
                 }
             }
         } else {
-            Toast.makeText(this@AddStoryActivity,"Add Desc and File First", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@AddStoryActivity,
+                getString(R.string.add_story_reminder),
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
+    }
+
+    private fun uploadImageWithoutLocation() {
+        val desc = binding.etDescription.text.toString()
+        if (getFile != null && desc.isNotEmpty()) {
+            showProgressBar(true)
+
+            val file = reduceFileImage(getFile as File)
+
+            val description =
+                binding.etDescription.text.toString()
+                    .toRequestBody("text/plain".toMediaType())
+
+            val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+            val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+                "photo",
+                file.name,
+                requestImageFile
+            )
+
+            val multiForm = "application/json"
+
+            viewModel.uploadStoryWithoutLocation(
+                imageMultipart,
+                description,
+                multiForm
+            ).observe(this) { response ->
+                if (response.error) {
+                    Toast.makeText(this@AddStoryActivity, "Failed Upload Story", Toast.LENGTH_SHORT)
+                        .show()
+                    showProgressBar(false)
+                } else {
+                    showProgressBar(false)
+                    Toast.makeText(
+                        this@AddStoryActivity,
+                        "Sucessfuly Upload Story",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    val intent = Intent(this@AddStoryActivity, HomeActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    finish()
+                }
+            }
+        } else {
+            Toast.makeText(
+                this@AddStoryActivity,
+                getString(R.string.add_story_reminder),
+                Toast.LENGTH_SHORT
+            )
+                .show()
         }
     }
 
